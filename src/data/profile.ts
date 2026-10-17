@@ -18,8 +18,22 @@ export interface Project {
   stack: string[];
   live?: string;
   code?: string;
-  /** Path under /public, e.g. "/projects/normalday.webp". A placeholder shows when the file is missing. */
+  /** Path under /public, e.g. "/projects/normalday.webp". When the file is missing, the drawn preview shows instead. */
   image?: string;
+  /** Small label above the title, e.g. "TU Shooting Club". */
+  tag?: Text;
+  /** Shows a red ● LIVE badge. */
+  isLive?: boolean;
+  /** Drawn preview used until a screenshot exists. */
+  preview?: 'scoreboard' | 'bills';
+}
+
+export interface MiniProject {
+  name: string;
+  tag: Text;
+  description: Text;
+  stack: string[];
+  code: string;
 }
 
 export interface SkillGroup {
@@ -51,7 +65,11 @@ export const profile = {
     en: 'I build practical tools for everyday problems.',
     th: 'สร้างเครื่องมือที่ใช้ได้จริง สำหรับปัญหาในชีวิตประจำวัน',
   } as Text,
+  /** Pill above the name. Remove or edit when it changes. */
+  status: { en: 'Open to internships', th: 'เปิดรับฝึกงาน' } as Text,
+  year: 4,
   email: 'kiktichej@lnynano.com',
+  instagram: 'https://www.instagram.com/lnynano',
   github: 'https://github.com/Lnynano',
   website: 'https://lnynano.com',
 
@@ -66,6 +84,9 @@ export const profile = {
       live: 'https://tools.lnynano.com',
       code: 'https://github.com/Lnynano/normalday',
       image: '/projects/normalday.webp',
+      tag: { en: 'Personal · PWA · TH/EN', th: 'ส่วนตัว · PWA · ไทย/อังกฤษ' },
+      isLive: true,
+      preview: 'bills',
     },
     {
       name: 'TU Shooting Scoreboard',
@@ -77,11 +98,38 @@ export const profile = {
       live: 'https://shooting.lnynano.com',
       code: 'https://github.com/Lnynano/tu-shooting-scoreboard',
       image: '/projects/tu-shooting-scoreboard.webp',
+      tag: { en: 'TU Shooting Club', th: 'ชมรมยิงปืน มธ.' },
+      isLive: true,
+      preview: 'scoreboard',
     },
   ] satisfies Project[],
 
+  /** Smaller cards under the featured projects. */
+  moreProjects: [
+    {
+      name: 'Thong Yip Thong Yod',
+      tag: { en: 'CN240 · Data Science', th: 'CN240 · วิทยาการข้อมูล' },
+      description: {
+        en: 'Multi-agent AI gold-trading dashboard: technical indicators, news sentiment and paper trading.',
+        th: 'แดชบอร์ดเทรดทองคำด้วย AI แบบ multi-agent ใช้อินดิเคเตอร์ ข่าว และเทรดจำลอง',
+      },
+      stack: ['Python', 'GPT-4o-mini', 'Gradio'],
+      code: 'https://github.com/Lnynano/Thong-Yip-Thong-Yod',
+    },
+    {
+      name: 'TU ECE Room Booking',
+      tag: { en: 'CN334 · Team of 4', th: 'CN334 · ทีม 4 คน' },
+      description: {
+        en: 'Department room booking with approval workflow, email notifications and usage reports.',
+        th: 'ระบบจองห้องของภาควิชา มีขั้นตอนอนุมัติ แจ้งเตือนทางอีเมล และรายงานการใช้งาน',
+      },
+      stack: ['Django', 'Docker'],
+      code: 'https://github.com/Lnynano/Tu_Django_Roombooking_web',
+    },
+  ] satisfies MiniProject[],
+
   skills: [
-    { label: { en: 'Languages', th: 'ภาษาโปรแกรม' }, items: ['Python', 'TypeScript/JavaScript', 'Java', 'C', 'SQL', 'Dart'] },
+    { label: { en: 'Languages', th: 'ภาษาโปรแกรม' }, items: ['Python', 'JavaScript', 'TypeScript (learning)', 'Java', 'C', 'SQL', 'Dart'] },
     { label: { en: 'Web', th: 'เว็บ' }, items: ['React', 'Vite', 'Astro', 'Django', 'Tailwind', 'PWA'] },
     { label: { en: 'Data / backend', th: 'ข้อมูล / แบ็กเอนด์' }, items: ['Supabase', 'MySQL', 'SQLite'] },
     { label: { en: 'Tools', th: 'เครื่องมือ' }, items: ['Git', 'GitHub Actions', 'Docker', 'Cloudflare', 'VS Code'] },
@@ -121,6 +169,8 @@ export const profile = {
       period: { en: '2023 – Present', th: '2023 – ปัจจุบัน' },
     },
   ] satisfies Education[],
+
+  courses: ['CN240 Data Science', 'CN311 Operating Systems', 'CN332 Design Patterns', 'CN334 Web'],
 };
 
 /** Display form of a URL without protocol, e.g. "tools.lnynano.com". */

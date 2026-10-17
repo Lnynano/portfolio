@@ -13,27 +13,30 @@ const nav = [
 ];
 ---
 
-<header class="no-print mx-auto flex max-w-4xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-  <a href={base} class="group inline-flex items-center gap-2 font-semibold tracking-tight">
-    <span class="size-2 rounded-full bg-accent transition-transform group-hover:scale-125" aria-hidden="true"></span>
-    {profile.handle}
-  </a>
-  <nav aria-label="Main" class="flex items-center gap-1 text-sm sm:gap-2">
-    <ul class="hidden items-center gap-1 md:flex">
-      {
-        nav.map((n) => (
-          <li>
-            <a href={n.href} class="rounded-full px-3 py-1.5 text-muted transition-colors hover:text-fg">
-              <T t={n.label} />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-    <a href={`${base}cv`} class="rounded-full px-3 py-1.5 font-semibold text-accent transition-colors hover:bg-accent-soft">
-      <T t={ui.cv} />
+<header class="no-print border-b border-line">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <a href={base} class="group inline-flex items-center gap-2.5 font-semibold tracking-tight">
+      <span class="size-2 rounded-full bg-accent transition-transform group-hover:scale-125" aria-hidden="true"></span>
+      {profile.handle}
     </a>
-    <LangToggle />
-    <ThemeToggle />
-  </nav>
+    <nav aria-label="Main" class="flex items-center gap-1 text-sm sm:gap-2">
+      <ul class="hidden items-center gap-1 md:flex">
+        {
+          nav.map((n) => (
+            <li>
+              <a href={n.href} class="rounded-full px-3 py-1.5 text-muted transition-colors hover:text-fg">
+                <T t={n.label} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a href={`${base}cv`} class="rounded-full px-3 py-1.5 font-semibold text-accent-ink transition-colors hover:bg-accent-soft">
+        <T t={ui.cv} />
+      </a>
+      <LangToggle />
+      <ThemeToggle />
+    </nav>
+  </div>
 </header>
+<div class="hazard no-print" aria-hidden="true"></div>

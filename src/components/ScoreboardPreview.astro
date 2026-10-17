@@ -1,0 +1,32 @@
+---
+// Drawn preview of the TU Shooting Scoreboard. Sample data only, not real results.
+const rows = [
+  { rank: 1, name: 'Shooter 07', score: 578, x: 18 },
+  { rank: 2, name: 'Shooter 12', score: 575, x: 15 },
+  { rank: 3, name: 'Shooter 03', score: 575, x: 12 },
+  { rank: 4, name: 'Shooter 21', score: 571, x: 9 },
+];
+---
+
+<div aria-hidden="true" class="w-full max-w-[440px] overflow-hidden rounded-xl border border-line bg-surface font-mono text-[13px]">
+  <div class="flex justify-between border-b border-line px-4 py-3 text-[11px] text-muted">
+    <span>10m AIR PISTOL · FINAL</span>
+    <span class="text-live"><span class="pulse">●</span> LIVE</span>
+  </div>
+  {
+    rows.map((r) => (
+      <div class:list={['grid grid-cols-[36px_1fr_auto] border-b border-line/60 px-4 py-[11px]', r.rank === 1 && 'bg-purple-soft']}>
+        <span class:list={[r.rank === 1 ? 'text-accent-ink' : 'text-muted']}>{r.rank}</span>
+        <span>{r.name}</span>
+        <span>
+          {r.score}
+          <span class="text-faint">-{r.x}x</span>
+        </span>
+      </div>
+    ))
+  }
+  <div class="flex justify-between px-4 py-2.5 text-[11px] text-faint">
+    <span>tie-break: inner 10s</span>
+    <span>auto-refresh 30s</span>
+  </div>
+</div>

@@ -1,57 +1,84 @@
 @import 'tailwindcss';
 @import '@fontsource/ibm-plex-sans-thai/latin-400.css';
+@import '@fontsource/ibm-plex-sans-thai/latin-500.css';
 @import '@fontsource/ibm-plex-sans-thai/latin-600.css';
+@import '@fontsource/ibm-plex-sans-thai/latin-700.css';
 @import '@fontsource/ibm-plex-sans-thai/thai-400.css';
 @import '@fontsource/ibm-plex-sans-thai/thai-600.css';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
 
 /* ---------- Tokens ----------
-   One accent color. Light is the default; dark applies via the system setting
-   unless the user picked a theme (html.light / html.dark, set by ThemeToggle). */
+   Black + neon green + purple, red for "live". Dark is the default;
+   light applies only when the visitor picks it (html.light, set by ThemeToggle).
+   --accent    : fills (buttons, cursor, stripes) — text on it uses --on-accent
+   --accent-ink: accent used as text color (stays readable in light mode)
+   --purple    : secondary accent (section numbers, glows, highlights) */
 :root {
-  --bg: #fbfaf8;
-  --surface: #f2f0ec;
-  --fg: #1c1b19;
-  --muted: #64615b;
-  --line: #e3e0da;
-  --accent: #c2410c;
-  --accent-soft: #fbe6dc;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --bg: #121211;
-    --surface: #1b1a19;
-    --fg: #ecebe8;
-    --muted: #a3a09a;
-    --line: #2c2b29;
-    --accent: #ff8f5e;
-    --accent-soft: #3a2117;
-    color-scheme: dark;
-  }
-}
-
-:root.dark {
-  --bg: #121211;
-  --surface: #1b1a19;
-  --fg: #ecebe8;
-  --muted: #a3a09a;
-  --line: #2c2b29;
-  --accent: #ff8f5e;
-  --accent-soft: #3a2117;
+  --bg: #0a0a0c;
+  --surface: #141218;
+  --surface-2: #1e1a26;
+  --sunken: #07070a;
+  --fg: #f2eff7;
+  --body: #cfcad8;
+  --muted: #a9a3b5;
+  --faint: #8e879c;
+  --line: #2a2433;
+  --line-strong: #3a3046;
+  --accent: #39ff6a;
+  --accent-ink: #39ff6a;
+  --on-accent: #0a0a0c;
+  --accent-soft: #12331d;
+  --purple: #8e5cf7;
+  --purple-ink: #a06bff;
+  --purple-soft: #2a1a45;
+  --live: #ff2d3d;
   color-scheme: dark;
+}
+
+:root.light {
+  --bg: #f7f5fb;
+  --surface: #ffffff;
+  --surface-2: #efebf5;
+  --sunken: #ece7f3;
+  --fg: #15121b;
+  --body: #2e2838;
+  --muted: #5c556a;
+  --faint: #6b6479;
+  --line: #ddd6e8;
+  --line-strong: #c9bfd8;
+  --accent: #2be05c;
+  --accent-ink: #0b7a2e;
+  --on-accent: #0a0a0c;
+  --accent-soft: #d9f8e2;
+  --purple: #7a45e6;
+  --purple-ink: #6431cf;
+  --purple-soft: #ebe1fd;
+  --live: #d4142a;
+  color-scheme: light;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-sunken: var(--sunken);
   --color-fg: var(--fg);
+  --color-body: var(--body);
   --color-muted: var(--muted);
+  --color-faint: var(--faint);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
   --color-accent-soft: var(--accent-soft);
+  --color-purple: var(--purple);
+  --color-purple-ink: var(--purple-ink);
+  --color-purple-soft: var(--purple-soft);
+  --color-live: var(--live);
   --font-sans: 'IBM Plex Sans Thai', ui-sans-serif, system-ui, 'Leelawadee UI', 'Noto Sans Thai', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
 }
 
 /* ---------- Base ---------- */
@@ -75,7 +102,8 @@ body {
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--purple);
+  color: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -100,14 +128,49 @@ html[data-lang='th'] [data-l='en'] {
 /* ---------- Shared bits ---------- */
 .link {
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent-ink) 45%, transparent);
   text-underline-offset: 0.2em;
   text-decoration-thickness: 1px;
   transition: text-decoration-color 0.15s, color 0.15s;
 }
 .link:hover {
-  color: var(--accent);
-  text-decoration-color: var(--accent);
+  color: var(--accent-ink);
+  text-decoration-color: var(--accent-ink);
+}
+
+/* Diagonal warning stripe band. */
+.hazard {
+  height: 6px;
+  background: repeating-linear-gradient(-45deg, var(--stripe, var(--purple)) 0 12px, var(--bg) 12px 24px);
+}
+.hazard-accent {
+  --stripe: var(--accent);
+}
+
+/* Terminal card glow. */
+.glow {
+  border-color: var(--purple);
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--purple) 14%, transparent),
+    0 24px 80px color-mix(in srgb, var(--purple) 22%, transparent);
+}
+
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.pulse {
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
 }
 
 /* Thai: no tracking, and no monospace fallback for dates/labels. */
@@ -118,12 +181,6 @@ html[data-lang='th'] [data-l='en'] {
   font-family: var(--font-sans);
 }
 
-.skills li:not(:last-child)::after {
-  content: '/';
-  margin-inline: 0.6em;
-  color: var(--line);
-}
-
 /* ---------- Print ---------- */
 @page {
   size: A4;
@@ -132,14 +189,18 @@ html[data-lang='th'] [data-l='en'] {
 
 @media print {
   :root,
-  :root.dark,
-  :root:not(.light) {
+  :root.light {
     --bg: #ffffff;
     --surface: #ffffff;
+    --surface-2: #ffffff;
     --fg: #111111;
+    --body: #111111;
     --muted: #4a4a4a;
+    --faint: #4a4a4a;
     --line: #d9d9d9;
-    --accent: #b23a0b;
+    --accent: #5b2bc4;
+    --accent-ink: #5b2bc4;
+    --on-accent: #ffffff;
     --accent-soft: #ffffff;
     color-scheme: light;
   }

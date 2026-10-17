@@ -26,8 +26,7 @@ const ogImage = new URL(base + 'og.png', site).href;
     <meta name="author" content={profile.name} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={base + 'favicon.svg'} type="image/svg+xml" />
-    <meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#121211" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0a0a0c" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={`${profile.handle} · ${profile.name}`} />
@@ -51,7 +50,7 @@ const ogImage = new URL(base + 'og.png', site).href;
         const root = document.documentElement;
         try {
           const theme = localStorage.getItem('theme');
-          if (theme === 'light' || theme === 'dark') root.classList.add(theme);
+          if (theme === 'light') root.classList.add('light');
           const lang = localStorage.getItem('lang');
           if (lang === 'en' || lang === 'th') {
             root.lang = lang;

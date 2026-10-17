@@ -4,6 +4,9 @@ import { join } from 'node:path';
 import type { Project } from '../data/profile';
 import { ui } from '../i18n/ui';
 import T from './T.astro';
+import LiveBadge from './LiveBadge.astro';
+import ScoreboardPreview from './ScoreboardPreview.astro';
+import BillPreview from './BillPreview.astro';
 
 interface Props {
   project: Project;
@@ -11,7 +14,7 @@ interface Props {
 
 const { project } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
-// Use the screenshot only if the file exists in /public; otherwise show a placeholder.
+// A real screenshot in /public wins; otherwise the drawn preview; otherwise initials.
 const hasImage = !!project.image && existsSync(join(process.cwd(), 'public', project.image));
 const initials = project.name
   .split(/\s+/)
@@ -20,8 +23,43 @@ const initials = project.name
   .slice(0, 3);
 ---
 
-<article class="group flex flex-col">
-  <div class="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-line bg-surface">
+<article class="grid overflow-hidden rounded-[20px] border border-line bg-surface md:grid-cols-2">
+  <div class="flex flex-col gap-4 p-7 sm:p-9">
+    <div class="flex flex-wrap items-center gap-2.5 font-mono text-xs font-medium uppercase">
+      {project.tag && <span class="text-accent-ink"><T t={project.tag} /></span>}
+      {project.isLive && <span class="text-line-strong" aria-hidden="true">/</span>}
+      {project.isLive && <LiveBadge />}
+    </div>
+    <h3 class="text-[1.9rem] leading-tight font-bold tracking-tight">{project.name}</h3>
+    <p class="text-body"><T t={project.description} /></p>
+
+    <ul class="flex flex-wrap gap-2" aria-label="Tech stack">
+      {project.stack.map((s) => <li class="rounded-md border border-line-strong px-2.5 py-1 font-mono text-xs text-body">{s}</li>)}
+    </ul>
+
+    <div class="mt-auto flex flex-wrap gap-5 pt-2 text-[0.95rem] font-semibold">
+      {
+        project.live && (
+          <a href={project.live} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">
+            <T t={ui.openLive} />
+            <span aria-hidden="true">↗</span>
+            <span class="sr-only">: {project.name} (opens in new tab)</span>
+          </a>
+        )
+      }
+      {
+        project.code && (
+          <a href={project.code} class="link inline-flex items-center gap-1 text-muted" target="_blank" rel="noopener">
+            <T t={ui.code} />
+            <span aria-hidden="true">↗</span>
+            <span class="sr-only">: {project.name} on GitHub (opens in new tab)</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="relative flex min-h-[320px] items-center justify-center border-t border-line bg-sunken p-8 md:border-t-0 md:border-l">
     {
       hasImage ? (
         <img
@@ -31,51 +69,24 @@ const initials = project.name
           height="800"
           loading="lazy"
           decoding="async"
-          class="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+          class="w-full rounded-xl border border-line object-cover object-top"
         />
+      ) : project.preview === 'scoreboard' ? (
+        <ScoreboardPreview />
+      ) : project.preview === 'bills' ? (
+        <BillPreview />
       ) : (
-        <div class="placeholder flex size-full flex-col items-center justify-center gap-2 text-muted" role="img" aria-label={`${project.name}: screenshot coming soon`}>
-          <span class="font-mono text-3xl font-semibold tracking-tight text-fg/70" aria-hidden="true">{initials}</span>
-          <span class="text-xs" aria-hidden="true">
-            <T t={ui.screenshotSoon} />
-          </span>
-        </div>
-      )
-    }
-  </div>
-
-  <h3 class="text-lg font-semibold tracking-tight">{project.name}</h3>
-  <p class="mt-2 text-[0.95rem] text-muted"><T t={project.description} /></p>
-
-  <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tech stack">
-    {project.stack.map((s) => <li class="rounded-md border border-line px-2 py-0.5 font-mono text-[0.72rem] text-muted">{s}</li>)}
-  </ul>
-
-  <div class="mt-5 flex gap-5 text-sm font-semibold">
-    {
-      project.live && (
-        <a href={project.live} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">
-          <T t={ui.live} />
-          <span aria-hidden="true">↗</span>
-          <span class="sr-only">: {project.name} (opens in new tab)</span>
-        </a>
+        <span class="font-mono text-3xl font-semibold text-muted" aria-label={`${project.name}: screenshot coming soon`}>
+          {initials}
+        </span>
       )
     }
     {
-      project.code && (
-        <a href={project.code} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">
-          <T t={ui.code} />
-          <span aria-hidden="true">↗</span>
-          <span class="sr-only">: {project.name} on GitHub (opens in new tab)</span>
-        </a>
+      !hasImage && project.preview && (
+        <span class="absolute right-4 bottom-3 font-mono text-[10px] text-faint">
+          <T t={ui.previewNote} />
+        </span>
       )
     }
   </div>
 </article>
-
-<style>
-  .placeholder {
-    background-image: radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0);
-    background-size: 14px 14px;
-  }
-</style>

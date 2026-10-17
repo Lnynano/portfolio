@@ -1,12 +1,12 @@
 ---
-// Follows the system theme until clicked; the choice is saved in localStorage.
+// Dark by default; clicking switches to light. The choice is saved in localStorage.
 ---
 
 <button
   type="button"
   data-theme-toggle
-  class="inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg"
-  aria-label="Toggle dark mode"
+  class="inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+  aria-label="Switch to light mode"
 >
   <svg class="theme-icon-sun size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
     <circle cx="12" cy="12" r="4"></circle>
@@ -19,40 +19,31 @@
 
 <style>
   /* Show the icon of the theme you would switch to. */
-  .theme-icon-sun {
+  .theme-icon-moon {
     display: none;
   }
-  @media (prefers-color-scheme: dark) {
-    :global(html:not(.light)) .theme-icon-sun {
-      display: block;
-    }
-    :global(html:not(.light)) .theme-icon-moon {
-      display: none;
-    }
+  :global(html.light) .theme-icon-sun {
+    display: none;
   }
-  :global(html.dark) .theme-icon-sun {
+  :global(html.light) .theme-icon-moon {
     display: block;
-  }
-  :global(html.dark) .theme-icon-moon {
-    display: none;
   }
 </style>
 
 <script>
   const root = document.documentElement;
-  const systemDark = matchMedia('(prefers-color-scheme: dark)');
-  const isDark = () => root.classList.contains('dark') || (!root.classList.contains('light') && systemDark.matches);
+  const isLight = () => root.classList.contains('light');
 
   const sync = () => {
-    const label = isDark() ? 'Switch to light mode' : 'Switch to dark mode';
+    const label = isLight() ? 'Switch to dark mode' : 'Switch to light mode';
     document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) => b.setAttribute('aria-label', label));
   };
 
   document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
     button.addEventListener('click', () => {
-      const next = isDark() ? 'light' : 'dark';
+      const next = isLight() ? 'dark' : 'light';
       root.classList.remove('light', 'dark');
-      root.classList.add(next);
+      if (next === 'light') root.classList.add('light');
       try {
         localStorage.setItem('theme', next);
       } catch {}
@@ -60,6 +51,5 @@
     });
   });
 
-  systemDark.addEventListener('change', sync);
   sync();
 </script>
