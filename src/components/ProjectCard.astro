@@ -24,7 +24,7 @@ const initials = project.name
 ---
 
 <article class="grid overflow-hidden rounded-[20px] border border-line bg-surface md:grid-cols-2">
-  <div class="flex flex-col gap-4 p-7 sm:p-9">
+  <div class="flex flex-col justify-center gap-4 p-7 sm:p-9">
     <div class="flex flex-wrap items-center gap-2.5 font-mono text-xs font-medium uppercase">
       {project.tag && <span class="text-accent-ink"><T t={project.tag} /></span>}
       {project.isLive && <span class="text-line-strong" aria-hidden="true">/</span>}
@@ -37,7 +37,7 @@ const initials = project.name
       {project.stack.map((s) => <li class="rounded-md border border-line-strong px-2.5 py-1 font-mono text-xs text-body">{s}</li>)}
     </ul>
 
-    <div class="mt-auto flex flex-wrap gap-5 pt-2 text-[0.95rem] font-semibold">
+    <div class="flex flex-wrap gap-5 pt-3 text-[0.95rem] font-semibold">
       {
         project.live && (
           <a href={project.live} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">

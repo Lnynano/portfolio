@@ -77,7 +77,7 @@ const en = (t: typeof profile.title) => (typeof t === 'string' ? t : t.en);
             profile.skills.map((g) => (
               <div class="grid grid-cols-[7.5rem_1fr] gap-3">
                 <dt class="text-muted"><T t={g.label} /></dt>
-                <dd>{g.items.join(', ')}</dd>
+                <dd>{g.items.filter((s) => !/learning/i.test(s)).join(', ')}</dd>
               </div>
             ))
           }
