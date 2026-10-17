@@ -1,0 +1,65 @@
+---
+// Follows the system theme until clicked; the choice is saved in localStorage.
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class="inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg"
+  aria-label="Toggle dark mode"
+>
+  <svg class="theme-icon-sun size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+  </svg>
+  <svg class="theme-icon-moon size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path>
+  </svg>
+</button>
+
+<style>
+  /* Show the icon of the theme you would switch to. */
+  .theme-icon-sun {
+    display: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(html:not(.light)) .theme-icon-sun {
+      display: block;
+    }
+    :global(html:not(.light)) .theme-icon-moon {
+      display: none;
+    }
+  }
+  :global(html.dark) .theme-icon-sun {
+    display: block;
+  }
+  :global(html.dark) .theme-icon-moon {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => root.classList.contains('dark') || (!root.classList.contains('light') && systemDark.matches);
+
+  const sync = () => {
+    const label = isDark() ? 'Switch to light mode' : 'Switch to dark mode';
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) => b.setAttribute('aria-label', label));
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = isDark() ? 'light' : 'dark';
+      root.classList.remove('light', 'dark');
+      root.classList.add(next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+      sync();
+    });
+  });
+
+  systemDark.addEventListener('change', sync);
+  sync();
+</script>

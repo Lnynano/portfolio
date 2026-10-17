@@ -1,0 +1,160 @@
+@import 'tailwindcss';
+@import '@fontsource/ibm-plex-sans-thai/latin-400.css';
+@import '@fontsource/ibm-plex-sans-thai/latin-600.css';
+@import '@fontsource/ibm-plex-sans-thai/thai-400.css';
+@import '@fontsource/ibm-plex-sans-thai/thai-600.css';
+
+/* ---------- Tokens ----------
+   One accent color. Light is the default; dark applies via the system setting
+   unless the user picked a theme (html.light / html.dark, set by ThemeToggle). */
+:root {
+  --bg: #fbfaf8;
+  --surface: #f2f0ec;
+  --fg: #1c1b19;
+  --muted: #64615b;
+  --line: #e3e0da;
+  --accent: #c2410c;
+  --accent-soft: #fbe6dc;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --bg: #121211;
+    --surface: #1b1a19;
+    --fg: #ecebe8;
+    --muted: #a3a09a;
+    --line: #2c2b29;
+    --accent: #ff8f5e;
+    --accent-soft: #3a2117;
+    color-scheme: dark;
+  }
+}
+
+:root.dark {
+  --bg: #121211;
+  --surface: #1b1a19;
+  --fg: #ecebe8;
+  --muted: #a3a09a;
+  --line: #2c2b29;
+  --accent: #ff8f5e;
+  --accent-soft: #3a2117;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: 'IBM Plex Sans Thai', ui-sans-serif, system-ui, 'Leelawadee UI', 'Noto Sans Thai', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+}
+
+/* ---------- Base ---------- */
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.65;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ---------- Language toggle ----------
+   Both languages are in the HTML; only the active one is shown. EN without JS. */
+html[data-lang='en'] [data-l='th'],
+html[data-lang='th'] [data-l='en'] {
+  display: none;
+}
+
+/* ---------- Shared bits ---------- */
+.link {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.15s, color 0.15s;
+}
+.link:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* Thai: no tracking, and no monospace fallback for dates/labels. */
+[lang='th'] {
+  letter-spacing: 0;
+}
+.font-mono [lang='th'] {
+  font-family: var(--font-sans);
+}
+
+.skills li:not(:last-child)::after {
+  content: '/';
+  margin-inline: 0.6em;
+  color: var(--line);
+}
+
+/* ---------- Print ---------- */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  :root,
+  :root.dark,
+  :root:not(.light) {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --fg: #111111;
+    --muted: #4a4a4a;
+    --line: #d9d9d9;
+    --accent: #b23a0b;
+    --accent-soft: #ffffff;
+    color-scheme: light;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  a {
+    text-decoration: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

@@ -1,0 +1,22 @@
+---
+import type { Text } from '../data/profile';
+import T from './T.astro';
+
+interface Props {
+  id: string;
+  title: Text;
+  index: number;
+}
+
+const { id, title, index } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`} class="scroll-mt-8 border-t border-line py-14 sm:py-20 md:grid md:grid-cols-[9rem_1fr] md:gap-8">
+  <h2 id={`${id}-title`} class="mb-8 flex items-baseline gap-3 text-sm font-semibold md:mb-0">
+    <span class="font-mono text-xs text-accent" aria-hidden="true">{String(index).padStart(2, '0')}</span>
+    <T t={title} />
+  </h2>
+  <div>
+    <slot />
+  </div>
+</section>

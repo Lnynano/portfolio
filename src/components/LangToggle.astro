@@ -1,0 +1,47 @@
+---
+// EN/TH switch. Default EN; the choice is saved in localStorage.
+const langs = [
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'th', label: 'TH', name: 'ภาษาไทย' },
+];
+---
+
+<div role="group" aria-label="Language" class="inline-flex items-center rounded-full border border-line p-0.5 text-xs font-semibold tracking-wide">
+  {
+    langs.map((l) => (
+      <button
+        type="button"
+        data-lang-btn={l.code}
+        lang={l.code}
+        aria-label={l.name}
+        aria-pressed={l.code === 'en' ? 'true' : 'false'}
+        class="rounded-full px-2.5 py-1 text-muted transition-colors hover:text-fg aria-pressed:bg-fg aria-pressed:text-bg"
+      >
+        {l.label}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-lang-btn]');
+
+  const apply = (lang: string) => {
+    root.lang = lang;
+    root.dataset.lang = lang;
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.langBtn === lang)));
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const lang = button.dataset.langBtn ?? 'en';
+      apply(lang);
+      try {
+        localStorage.setItem('lang', lang);
+      } catch {}
+    });
+  });
+
+  apply(root.dataset.lang ?? 'en');
+</script>

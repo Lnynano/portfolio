@@ -1,0 +1,186 @@
+---
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import LangToggle from '../components/LangToggle.astro';
+import { profile, bare } from '../data/profile';
+import { ui } from '../i18n/ui';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const en = (t: typeof profile.title) => (typeof t === 'string' ? t : t.en);
+---
+
+<Base title={`${profile.name} CV`} description={`CV of ${profile.name} (${profile.handle}), ${en(profile.title)}.`} path="cv">
+  <div class="min-h-dvh bg-surface pb-16 print:bg-white print:pb-0">
+    <div class="no-print mx-auto flex max-w-[210mm] flex-wrap items-center justify-between gap-3 px-5 py-5 sm:px-0">
+      <a href={base} class="link inline-flex gap-1.5 text-sm text-muted">
+        <span aria-hidden="true">←</span>
+        <T t={ui.back} />
+      </a>
+      <div class="flex items-center gap-2">
+        <LangToggle />
+        <ThemeToggle />
+        <button
+          type="button"
+          data-print
+          class="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-bg transition-opacity hover:opacity-90"
+        >
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M4 19h16"></path>
+          </svg>
+          <T t={ui.downloadPdf} />
+        </button>
+      </div>
+      <p class="w-full text-xs text-muted"><T t={ui.printHint} /></p>
+    </div>
+
+    <main class="sheet mx-auto w-full max-w-[210mm] bg-bg px-6 py-10 shadow-sm ring-1 ring-line sm:rounded-sm sm:px-[16mm] sm:py-[14mm]">
+      <header class="border-b border-line pb-5">
+        <h1 class="text-[1.9rem] leading-tight font-semibold tracking-tight">
+          {profile.name} <span class="text-muted">({profile.handle})</span>
+        </h1>
+        <p class="mt-1 text-muted"><T t={profile.title} /></p>
+        <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+          <li><a class="link" href={`mailto:${profile.email}`}>{profile.email}</a></li>
+          <li><a class="link" href={profile.github}>{bare(profile.github)}</a></li>
+          <li><a class="link" href={profile.website}>{bare(profile.website)}</a></li>
+        </ul>
+        <p class="mt-4 text-[1.05rem]"><T t={profile.pitch} /></p>
+      </header>
+
+      <section class="cv-row" aria-labelledby="cv-projects">
+        <h2 id="cv-projects" class="cv-label"><T t={ui.projects} /></h2>
+        <div class="space-y-4">
+          {
+            profile.projects.map((p) => (
+              <article>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                  <h3 class="font-semibold">{p.name}</h3>
+                  <p class="font-mono text-[0.72rem] text-muted">
+                    {p.live && <a href={p.live} class="link">{bare(p.live)}</a>}
+                    {p.live && p.code && <span aria-hidden="true"> · </span>}
+                    {p.code && <a href={p.code} class="link">{bare(p.code)}</a>}
+                  </p>
+                </div>
+                <p class="text-[0.92rem]"><T t={p.description} /></p>
+                <p class="mt-0.5 font-mono text-[0.72rem] text-muted">{p.stack.join(' · ')}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="cv-row" aria-labelledby="cv-skills">
+        <h2 id="cv-skills" class="cv-label"><T t={ui.skills} /></h2>
+        <dl class="space-y-1 text-[0.92rem]">
+          {
+            profile.skills.map((g) => (
+              <div class="grid grid-cols-[7.5rem_1fr] gap-3">
+                <dt class="text-muted"><T t={g.label} /></dt>
+                <dd>{g.items.join(', ')}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section class="cv-row" aria-labelledby="cv-experience">
+        <h2 id="cv-experience" class="cv-label"><T t={ui.experience} /></h2>
+        <ol class="space-y-3.5">
+          {
+            profile.experience.map((e) => (
+              <li>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                  <h3 class="font-semibold"><T t={e.role} /></h3>
+                  {e.period && <p class="font-mono text-[0.72rem] text-muted"><T t={e.period} /></p>}
+                </div>
+                <p class="text-[0.92rem] text-muted"><T t={e.org} /></p>
+                {e.details && <p class="text-[0.92rem]"><T t={e.details} /></p>}
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section class="cv-row" aria-labelledby="cv-education">
+        <h2 id="cv-education" class="cv-label"><T t={ui.education} /></h2>
+        <ul class="space-y-2">
+          {
+            profile.education.map((ed) => (
+              <li>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+                  <h3 class="font-semibold"><T t={ed.degree} /></h3>
+                  <p class="font-mono text-[0.72rem] text-muted"><T t={ed.period} /></p>
+                </div>
+                <p class="text-[0.92rem] text-muted"><T t={ed.school} /></p>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .cv-row {
+    border-bottom: 1px solid var(--line);
+    padding-block: 1.1rem;
+  }
+  .cv-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .cv-label {
+    margin-bottom: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  @media (min-width: 640px) {
+    .cv-row {
+      display: grid;
+      grid-template-columns: 7rem 1fr;
+      gap: 1.25rem;
+    }
+    .cv-label {
+      margin-bottom: 0;
+      padding-top: 0.2rem;
+    }
+  }
+
+  @media print {
+    :global(body) {
+      line-height: 1.5;
+    }
+    .sheet {
+      width: 210mm;
+      max-width: none;
+      height: 297mm;
+      overflow: hidden;
+      margin: 0;
+      padding: 13mm 15mm;
+      font-size: 10pt;
+      box-shadow: none;
+      border-radius: 0;
+      --tw-ring-shadow: 0 0 #0000;
+    }
+    .cv-row {
+      display: grid;
+      grid-template-columns: 26mm 1fr;
+      gap: 5mm;
+      padding-block: 3.2mm;
+      break-inside: avoid;
+    }
+    .cv-label {
+      margin-bottom: 0;
+      padding-top: 0.5mm;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-print]').forEach((b) => b.addEventListener('click', () => window.print()));
+</script>

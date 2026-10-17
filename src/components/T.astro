@@ -1,0 +1,21 @@
+---
+import type { Text } from '../data/profile';
+
+// Renders a Text value. Bilingual values output both languages; CSS shows the active one.
+interface Props {
+  t: Text;
+}
+
+const { t } = Astro.props;
+---
+
+{
+  typeof t === 'string' ? (
+    t
+  ) : (
+    <>
+      <span data-l="en">{t.en}</span>
+      <span data-l="th" lang="th">{t.th}</span>
+    </>
+  )
+}

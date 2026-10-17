@@ -1,0 +1,81 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import type { Project } from '../data/profile';
+import { ui } from '../i18n/ui';
+import T from './T.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+// Use the screenshot only if the file exists in /public; otherwise show a placeholder.
+const hasImage = !!project.image && existsSync(join(process.cwd(), 'public', project.image));
+const initials = project.name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .join('')
+  .slice(0, 3);
+---
+
+<article class="group flex flex-col">
+  <div class="relative mb-5 aspect-[16/10] overflow-hidden rounded-xl border border-line bg-surface">
+    {
+      hasImage ? (
+        <img
+          src={base + project.image!.replace(/^\//, '')}
+          alt={`Screenshot of ${project.name}`}
+          width="1280"
+          height="800"
+          loading="lazy"
+          decoding="async"
+          class="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+        />
+      ) : (
+        <div class="placeholder flex size-full flex-col items-center justify-center gap-2 text-muted" role="img" aria-label={`${project.name}: screenshot coming soon`}>
+          <span class="font-mono text-3xl font-semibold tracking-tight text-fg/70" aria-hidden="true">{initials}</span>
+          <span class="text-xs" aria-hidden="true">
+            <T t={ui.screenshotSoon} />
+          </span>
+        </div>
+      )
+    }
+  </div>
+
+  <h3 class="text-lg font-semibold tracking-tight">{project.name}</h3>
+  <p class="mt-2 text-[0.95rem] text-muted"><T t={project.description} /></p>
+
+  <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tech stack">
+    {project.stack.map((s) => <li class="rounded-md border border-line px-2 py-0.5 font-mono text-[0.72rem] text-muted">{s}</li>)}
+  </ul>
+
+  <div class="mt-5 flex gap-5 text-sm font-semibold">
+    {
+      project.live && (
+        <a href={project.live} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">
+          <T t={ui.live} />
+          <span aria-hidden="true">↗</span>
+          <span class="sr-only">: {project.name} (opens in new tab)</span>
+        </a>
+      )
+    }
+    {
+      project.code && (
+        <a href={project.code} class="link inline-flex items-center gap-1" target="_blank" rel="noopener">
+          <T t={ui.code} />
+          <span aria-hidden="true">↗</span>
+          <span class="sr-only">: {project.name} on GitHub (opens in new tab)</span>
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .placeholder {
+    background-image: radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0);
+    background-size: 14px 14px;
+  }
+</style>

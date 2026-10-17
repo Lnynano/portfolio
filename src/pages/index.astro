@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Section from '../components/Section.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import T from '../components/T.astro';
+import { profile, bare } from '../data/profile';
+import { ui } from '../i18n/ui';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const en = (t: typeof profile.pitch) => (typeof t === 'string' ? t : t.en);
+---
+
+<Base title={`${profile.name} (${profile.handle})`} description={`${en(profile.title)}. ${en(profile.pitch)}`}>
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-10 focus:rounded-md focus:bg-fg focus:px-3 focus:py-2 focus:text-bg">
+    Skip to content
+  </a>
+  <Header />
+
+  <main id="main" class="mx-auto max-w-4xl px-5 sm:px-8">
+    <section class="pt-16 pb-20 sm:pt-28 sm:pb-28" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="text-[2.1rem] leading-[1.15] font-semibold tracking-tight text-balance sm:text-5xl">
+        {profile.name}{' '}
+        <span class="text-muted">({profile.handle})</span>
+      </h1>
+      <p class="mt-5 text-muted"><T t={profile.title} /></p>
+      <p class="mt-8 max-w-xl text-xl leading-snug text-balance sm:text-2xl">
+        <T t={profile.pitch} />
+      </p>
+
+      <ul class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-[0.95rem]">
+        <li><a class="link" href={`mailto:${profile.email}`}>{profile.email}</a></li>
+        <li>
+          <a class="link" href={profile.github} target="_blank" rel="noopener me">{bare(profile.github)}</a>
+        </li>
+        <li>
+          <a href={`${base}cv`} class="inline-flex items-center gap-1.5 rounded-full bg-fg px-4 py-2 text-sm font-semibold text-bg transition-opacity hover:opacity-85">
+            <T t={ui.viewCv} />
+            <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <Section id="projects" title={ui.projects} index={1}>
+      <div class="grid gap-12 sm:grid-cols-2 sm:gap-8">
+        {profile.projects.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </Section>
+
+    <Section id="skills" title={ui.skills} index={2}>
+      <dl class="space-y-5">
+        {
+          profile.skills.map((g) => (
+            <div class="sm:grid sm:grid-cols-[9rem_1fr] sm:gap-4">
+              <dt class="text-sm text-muted"><T t={g.label} /></dt>
+              <dd class="mt-1 sm:mt-0">
+                <ul class="skills flex flex-wrap gap-y-1">
+                  {g.items.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Section>
+
+    <Section id="experience" title={ui.experience} index={3}>
+      <ol class="space-y-10">
+        {
+          profile.experience.map((e) => (
+            <li>
+              <div class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                <h3 class="font-semibold"><T t={e.role} /></h3>
+                {e.period && <p class="shrink-0 font-mono text-xs text-muted"><T t={e.period} /></p>}
+              </div>
+              <p class="text-muted"><T t={e.org} /></p>
+              {e.details && <p class="mt-2 text-[0.95rem]"><T t={e.details} /></p>}
+            </li>
+          ))
+        }
+      </ol>
+    </Section>
+
+    <Section id="education" title={ui.education} index={4}>
+      <ul class="space-y-6">
+        {
+          profile.education.map((ed) => (
+            <li>
+              <div class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                <h3 class="font-semibold"><T t={ed.degree} /></h3>
+                <p class="shrink-0 font-mono text-xs text-muted"><T t={ed.period} /></p>
+              </div>
+              <p class="text-muted"><T t={ed.school} /></p>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+  </main>
+
+  <footer class="mx-auto mt-8 max-w-4xl border-t border-line px-5 py-10 text-sm text-muted sm:px-8">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {new Date().getFullYear()} {profile.name}</p>
+      <ul class="flex gap-5">
+        <li><a class="link" href={`mailto:${profile.email}`}>Email</a></li>
+        <li><a class="link" href={profile.github} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a class="link" href={`${base}cv`}><T t={ui.cv} /></a></li>
+      </ul>
+    </div>
+  </footer>
+</Base>
