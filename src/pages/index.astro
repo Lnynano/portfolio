@@ -18,7 +18,10 @@ const startYear = (() => {
 })();
 ---
 
-<Base title={`${profile.name} (${profile.handle})`} description={`${en(profile.title)}. ${en(profile.pitch)}`}>
+<Base
+  title={`${profile.name} (${profile.handle}) · ${profile.nameTh}`}
+  description={`${en(profile.title)}. ${en(profile.pitch)} Also written ${profile.altNames.join(', ')} (${profile.nameTh}).`}
+>
   <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-10 focus:rounded-md focus:bg-fg focus:px-3 focus:py-2 focus:text-bg">
     Skip to content
   </a>
@@ -39,6 +42,7 @@ const startYear = (() => {
         <h1 id="hero-title" class="text-[2.6rem] leading-[1.04] font-bold tracking-tight text-balance sm:text-6xl">
           {profile.name}{' '}
           <span class="text-purple-ink">({profile.handle})</span>
+          <span lang="th" class="mt-3 block text-xl font-medium tracking-normal text-muted sm:text-2xl">{profile.nameTh}</span>
         </h1>
         <p class="max-w-[32ch] text-xl leading-snug text-balance sm:text-2xl">
           <T t={profile.pitch} />
@@ -203,7 +207,10 @@ const startYear = (() => {
 
   <footer class="mx-auto mt-12 max-w-6xl border-t border-line px-5 py-8 text-sm text-muted sm:px-8">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {new Date().getFullYear()} {profile.name}</p>
+      <div>
+        <p>© {new Date().getFullYear()} {profile.name} · <span lang="th">{profile.nameTh}</span></p>
+        <p class="text-faint">Also written {profile.altNames.join(', ')}</p>
+      </div>
       <ul class="flex gap-5">
         <li><a class="link" href={profile.github} target="_blank" rel="noopener">GitHub</a></li>
         <li><a class="link" href={profile.instagram} target="_blank" rel="noopener">Instagram</a></li>

@@ -10,7 +10,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const en = (t: typeof profile.title) => (typeof t === 'string' ? t : t.en);
 ---
 
-<Base title={`${profile.name} CV`} description={`CV of ${profile.name} (${profile.handle}), ${en(profile.title)}.`} path="cv">
+<Base title={`${profile.name} CV`} description={`CV of ${profile.name} (${profile.handle}, ${profile.nameTh}, also written ${profile.altNames.join(', ')}), ${en(profile.title)}.`} path="cv/">
   <div class="min-h-dvh bg-sunken pb-16 print:bg-white print:pb-0">
     <div class="hazard no-print" aria-hidden="true"></div>
     <div class="no-print mx-auto flex max-w-[210mm] flex-wrap items-center justify-between gap-3 px-5 py-5 sm:px-0">
@@ -40,6 +40,7 @@ const en = (t: typeof profile.title) => (typeof t === 'string' ? t : t.en);
         <h1 class="text-[1.9rem] leading-tight font-semibold tracking-tight">
           {profile.name} <span class="text-purple-ink">({profile.handle})</span>
         </h1>
+        <p lang="th" class="text-muted">{profile.nameTh}</p>
         <p class="mt-1 text-muted"><T t={profile.title} /></p>
         <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
           <li><a class="link" href={`mailto:${profile.email}`}>{profile.email}</a></li>

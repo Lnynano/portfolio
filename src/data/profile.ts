@@ -56,6 +56,10 @@ export interface Education {
 
 export const profile = {
   name: 'Kiktichej Sintaosathapon',
+  /** Name in Thai script. Shown on the page so searches in Thai find the site. */
+  nameTh: 'กิตติเชษฐ์ สินเธาว์สถาพร',
+  /** Other spellings people search for. Shown in the footer and structured data. */
+  altNames: ['Kittichet Sintaosathapon'],
   handle: 'Lnynano',
   title: {
     en: 'Computer Engineering student @ Thammasat University (Rangsit)',
